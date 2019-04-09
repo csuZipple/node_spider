@@ -24,7 +24,6 @@ export class jdbc   {
     fn (sql, ...args) {
         return new Promise(((resolve, reject) => {
             this.init(connection => {
-                console.log(args)
                 connection.query(sql, args, (err, result) => {
                     if(err){
                         reject('sql运行错误 sql-> ', sql ,' Error:  ', JSON.stringify(err))
