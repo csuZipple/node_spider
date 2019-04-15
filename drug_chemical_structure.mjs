@@ -3,18 +3,13 @@ import {jdbc as JDBC} from './mysql'
 
 const jdbc = new JDBC(config.db);
 let count = 0;
-let empty =  0
 console.log('开始储存数据');
-jdbc.select('select drugId from druglist').then( result => {
+jdbc.select('select cIds from drug_chemical_info').then( result => {
     result.forEach(item => {
-        let imageUrl = config.imageUrl(item.drugId.replace('CIDs', ''));
-        if(imageUrl.split('NA').length > 1){
-            empty ++
-            return
-        }
-        jdbc.update('UPDATE druglist SET origin_img_url = ? WHERE drugId = ?', imageUrl, item.drugId).then(() => {
-           console.log(`${formatTime(new Date())} 已处理${++count}条数据  ${empty ? "【跳过" + empty + "条数据】" : ''}  共 ${result.length} 条数据`);
-            if(count + empty === result.length){
+        let imageUrl = config.imageUrl(item.cIds.replace('CIDs', ''));
+        jdbc.update('UPDATE drug_chemical_info SET originImgUrl = ? WHERE cIds = ?', imageUrl, item.cIds).then(() => {
+           console.log(`${formatTime(new Date())} 已处理${++count}条数据   共 ${result.length} 条数据`);
+            if(count  === result.length){
                 console.log('储存成功！');
                 jdbc.destroy();
             }
